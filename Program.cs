@@ -45,5 +45,6 @@ app.UseHttpsRedirection();
 app.UseCors();
 
 OrdersApi.Map(app);
+PaymentsApi.Map(app);
 
 app.Run();
