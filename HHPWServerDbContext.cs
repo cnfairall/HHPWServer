@@ -8,6 +8,7 @@ using HHPWServer.Models;
         public DbSet<Payment> Payments { get; set; }
         public DbSet<OrderType> OrderTypes { get; set; }
         public DbSet<PaymentType> PaymentTypes { get; set; }
+        public DbSet<User> Users { get; set; }
         public HHPWServerDbContext(DbContextOptions<HHPWServerDbContext> context) : base(context)
         {
 
@@ -50,5 +51,11 @@ using HHPWServer.Models;
                new OrderType { Id = 1, Name = "in person" },
                new OrderType { Id = 2, Name = "phone" }
            });
+
+            modelBuilder.Entity<User>().HasData(new User[]
+          {
+               new User { Id = 1, Uid = "HK475G8BK" },
+               new User { Id = 2, Uid = "LL4910HEJ" }
+          });
         }
     }
