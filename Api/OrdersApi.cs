@@ -19,6 +19,7 @@ namespace HHPWServer.Api
             {
                 Order order = db.Orders
                                 .Include(o => o.Items)
+                                .ThenInclude(i => i.Item)
                                 .SingleOrDefault(o => o.Id == orderId);
                 if (order != null)
                 {
@@ -73,9 +74,18 @@ namespace HHPWServer.Api
                 {
                     return Results.BadRequest("Invalid data submitted");
                 }
+                if (itemToAdd == null)
+                {
+                    return Results.BadRequest("No such item exists");
+                }
                 try
                 {
-                    order.Items.Add(itemToAdd);
+                    OrderItem orderItem = new()
+                    {
+                        Item = itemToAdd,
+                        Order = order,
+                    };
+                    order.Items.Add(orderItem);
                     db.SaveChanges();
                     return Results.Ok("item added");
                 }
@@ -99,15 +109,16 @@ namespace HHPWServer.Api
                 {
                     return Results.BadRequest("Order is empty");
                 }
-                Item itemToRemove = order.Items
-                                         .SingleOrDefault(i => i.Id == chosenItem.ItemId);
+                Item itemToRemove = db.Items
+                                      .FirstOrDefault(i => i.Id == chosenItem.ItemId);
                 if (itemToRemove == null)
                 {
-                    return Results.BadRequest("Item not found in order");
+                    return Results.BadRequest("Item not found");
                 }
-                order.Items.Remove(itemToRemove);
+                OrderItem orderItem = db.OrderItems.FirstOrDefault(i => i.Item.Id == itemToRemove.Id && i.Order.Id == order.Id);
+                order.Items.Remove(orderItem);
                 db.SaveChanges();
-                return Results.Ok("item removed");
+                return Results.Ok("Item removed");
             });
         }
     }

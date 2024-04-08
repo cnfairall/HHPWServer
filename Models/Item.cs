@@ -5,6 +5,6 @@
         public int Id {  get; set; }
         public string ItemName { get; set; }
         public decimal ItemPrice { get; set; }
-        public ICollection<Order> Orders { get; set; }
+        public List<OrderItem> Orders { get; set; } = new List<OrderItem>();
     }
 }

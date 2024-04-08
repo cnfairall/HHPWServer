@@ -9,10 +9,12 @@ using HHPWServer.Models;
         public DbSet<OrderType> OrderTypes { get; set; }
         public DbSet<PaymentType> PaymentTypes { get; set; }
         public DbSet<User> Users { get; set; }
-        public HHPWServerDbContext(DbContextOptions<HHPWServerDbContext> context) : base(context)
-        {
+        public DbSet<OrderItem> OrderItems { get; set; }
 
-        }
+        public HHPWServerDbContext(DbContextOptions<HHPWServerDbContext> context) : base(context)
+            {
+
+            }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Order>().HasData(new Order[]
