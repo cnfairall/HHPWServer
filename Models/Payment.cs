@@ -10,7 +10,9 @@
         public virtual decimal OrderTotal
             { get
                 {
-                    return Order.Items.Sum(x => x.ItemPrice) + TipAmount;
+                    var itemPrices = Order.Items.Select(i => i.Item.ItemPrice).ToList();
+                    var total = itemPrices.Sum() + TipAmount;
+                    return total;
                 }
             }
         public decimal TipAmount { get; set; }

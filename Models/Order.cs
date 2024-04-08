@@ -8,7 +8,7 @@
         public string PhoneNum { get; set; }
         public int OrderTypeId { get; set; }
         public bool IsClosed { get; set; }
-        public ICollection<Item> Items { get; set; }
+        public List<OrderItem> Items { get; set; } = new List<OrderItem>();
 
     }
 }
