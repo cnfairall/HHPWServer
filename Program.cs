@@ -46,5 +46,6 @@ app.UseCors();
 
 OrdersApi.Map(app);
 PaymentsApi.Map(app);
+UsersApi.Map(app);
 
 app.Run();

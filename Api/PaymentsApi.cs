@@ -6,12 +6,12 @@ namespace HHPWServer.Api
     {
         public static void Map(WebApplication app)
         {
+            //close order
             app.MapPost("/api/payments/new", (HHPWServerDbContext db, Payment payment) =>
             {
-                db.Payments.Add(payment);
-                db.SaveChanges();
                 Order order = db.Orders
                                 .Include(o => o.Items)
+                                .ThenInclude(i => i.Item)
                                 .SingleOrDefault(o => o.Id  == payment.OrderId);
                 if (order == null)
                 {
@@ -26,7 +26,22 @@ namespace HHPWServer.Api
                     return Results.BadRequest("Cannot close empty order");
                 }
                 order.IsClosed = true;
+                db.Payments.Add(payment);
+                db.SaveChanges();
                 return Results.Created($"/api/payments/{payment.Id}", payment);
+            });
+
+            //get total revenue
+            app.MapGet("/api/payments/revenue", (HHPWServerDbContext db) =>
+            {
+                var orderTotals = db.Payments
+                .Include(p => p.Order)
+                .ThenInclude(o => o.Items)
+                .ThenInclude(i => i.Item)
+                .Select(p => p.OrderTotal).ToList();
+                var revenue = orderTotals.Sum();
+                                
+                return revenue;
             });
         }
     }
