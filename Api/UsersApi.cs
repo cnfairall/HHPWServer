@@ -1,4 +1,5 @@
-﻿using HHPWServer.Models;
+﻿using HHPWServer.Dtos;
+using HHPWServer.Models;
 
 namespace HHPWServer.Api
 {
@@ -6,6 +7,26 @@ namespace HHPWServer.Api
     {
         public static void Map(WebApplication app)
         {
+            //check user
+            app.MapPost("/api/checkuser", (HHPWServerDbContext db, UserAuthDto uid) =>
+            {
+                User user = db.Users.SingleOrDefault(u => u.Uid == uid.Uid);
+
+                if (user != null)
+                {
+                    return Results.Ok(user);              
+                }
+                else
+                {
+                    User newUser = new User();
+                    newUser.Uid = uid.Uid;
+                    db.Users.Add(newUser);
+                    db.SaveChanges();
+                    return Results.Created($"/users/{newUser.Id}", newUser);
+                }
+
+            });
+
             //get single user
             app.MapGet("/api/users/{userId}", (HHPWServerDbContext db, int userId) =>
             {
@@ -15,14 +36,6 @@ namespace HHPWServer.Api
                     return Results.Ok(user);
                 }
                 return Results.NotFound("No user found");
-            });
-
-            //create user
-            app.MapPost("/api/users/new", (HHPWServerDbContext db, User user) =>
-            {
-                db.Users.Add(user);
-                db.SaveChanges();
-                return Results.Ok(user);
             });
         }
     }

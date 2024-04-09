@@ -9,7 +9,7 @@ builder.Services.AddCors(options =>
 {
     options.AddDefaultPolicy(policy =>
     {
-        policy.WithOrigins("http://localhost:5053", "http://localhost:5003")
+        policy.WithOrigins("http://localhost:3000")
         .AllowAnyOrigin()
         .AllowAnyMethod()
         .AllowAnyHeader();
@@ -47,5 +47,7 @@ app.UseCors();
 OrdersApi.Map(app);
 PaymentsApi.Map(app);
 UsersApi.Map(app);
+PaymentTypesApi.Map(app);
+OrderTypesApi.Map(app);
 
 app.Run();
