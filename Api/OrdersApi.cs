@@ -57,9 +57,13 @@ namespace HHPWServer.Api
             app.MapDelete("/api/orders/{orderId}", (HHPWServerDbContext db, int orderId) =>
             {
                 Order orderToDelete = db.Orders.SingleOrDefault(o => o.Id == orderId);
-                db.Orders.Remove(orderToDelete);
-                db.SaveChanges();
-                return Results.Ok("Order deleted");
+                if (orderToDelete != null)
+                {
+                    db.Orders.Remove(orderToDelete);
+                    db.SaveChanges();
+                    return Results.Ok("Order deleted");
+                }
+                return Results.BadRequest("No order found");
             });
 
             //add item to order
