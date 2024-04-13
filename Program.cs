@@ -49,5 +49,6 @@ PaymentsApi.Map(app);
 UsersApi.Map(app);
 PaymentTypesApi.Map(app);
 OrderTypesApi.Map(app);
+ItemsApi.Map(app);
 
 app.Run();
