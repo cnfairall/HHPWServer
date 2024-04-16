@@ -18,6 +18,7 @@ namespace HHPWServer.Api
             app.MapGet("/api/orders/{orderId}", (HHPWServerDbContext db, int orderId) =>
             {
                 Order order = db.Orders
+                                .Include(o => o.Payment)
                                 .Include(o => o.Items)
                                 .ThenInclude(i => i.Item)
                                 .SingleOrDefault(o => o.Id == orderId);

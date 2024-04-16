@@ -43,6 +43,21 @@ namespace HHPWServer.Api
                                 
                 return revenue;
             });
+
+            //get payment by order id
+            app.MapGet("/api/payments/{orderId}", (HHPWServerDbContext db, int orderId) =>
+            {
+                Payment payment = db.Payments
+                                    .Include(p => p.Order)
+                                    .ThenInclude(o => o.Items)
+                                    .ThenInclude(i => i.Item)
+                                    .SingleOrDefault(p => p.OrderId == orderId);
+                if (payment != null)
+                {
+                    return Results.Ok(payment);
+                }
+                return Results.BadRequest("No payment found");
+            });
         }
     }
 }
