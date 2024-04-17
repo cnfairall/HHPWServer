@@ -125,6 +125,17 @@ namespace HHPWServer.Api
                 db.SaveChanges();
                 return Results.Ok("Item removed");
             });
+
+            //search orders
+            app.MapGet("/api/orders/search/{searchInput}", (HHPWServerDbContext db, string searchInput) =>
+            {
+                List<Order> searchResults = db.Orders.Where(o => o.CustName.ToLower().Contains(searchInput) || o.PhoneNum.ToLower().Contains(searchInput)).ToList();
+                if (searchResults != null)
+                {
+                    return Results.Ok(searchResults);
+                }
+                return Results.NotFound("no results found");
+            });
         }
     }
 }

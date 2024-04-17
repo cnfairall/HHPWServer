@@ -58,6 +58,21 @@ namespace HHPWServer.Api
                 }
                 return Results.BadRequest("No payment found");
             });
+
+            //get all payments
+            app.MapGet("/api/payments", (HHPWServerDbContext db) =>
+            {
+                List<Payment> payments = db.Payments
+                                    .Include(p => p.Order)
+                                    .ToList();
+
+                if (payments != null)
+                {
+                    return Results.Ok(payments);
+                }
+                return Results.BadRequest("No payment found");
+            });
+
         }
     }
 }
